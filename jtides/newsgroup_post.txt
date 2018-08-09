@@ -1,0 +1,5 @@
+Hello fellow sailor!
+
+I have written a rather nice tide prediction program. It's free. It is written in the programming language "Java", so it will run on nearly any computer. It has a worldwide tide and current database, and its accuracy is equal to that of published tables. Please take a look at http://www.arachnoid.com/JTides.
+
+I hope you like it!

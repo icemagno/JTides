@@ -1,0 +1,69 @@
+<!doctype html public "-//w3c//dtd html 3.2//en">
+
+<html>
+
+<head>
+<title>JTides Help | Technical Background</title>
+<meta name="GENERATOR" content="Arachnophilia 4.0">
+<meta name="FORMATTER" content="Arachnophilia 4.0">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#800080" alink="#ff0000">
+
+<div align="center">	<h1><font color=#800040>JTides Help | Technical Background</font></h1></div>
+
+<div align="center"><b>About Tidal Prediction</b></div>
+
+<p>
+"JTides" relies on data collected from tidal and current monitoring stations, mostly at public expense. These data are then turned into a table of mathematical factors. The factors model the tides through a mathematical method called a "Fourier series."
+<br>
+<br>The mathematician Fourier discovered that any complex periodic waveform can be broken down into a series of sinusoidal components. It was a short conceptual step from that to realizing the sine components represent a frequency-domain spectrum of the original time-domain waveform.
+<br>
+<br>A Fourier series is a special case of a Fourier transform, the conversion of data based in time into data based in frequency, so to speak.
+<br>
+<br>It turns out that, no matter how complex the original time-varying waveform, if you collect enough information, you have a good chance to reproduce the original time-varying events using a compact mathematical representation. Tidal prediction is based on this idea.
+<br>
+<br>Most American tidal data consist of 37 Fourier terms, plus a set of correcting factors for each year during which the data are expected to be used. This becomes a rather large data set, but it is obviously much smaller than simply recording the time-varying data and storing that.
+<br>
+<br>"JTides" reads such a data file and turns it into a tidal or current prediction. If future tidal data become available, perhaps with different numbers of terms or for different years, but in the same file format, "Tide" will know how to read and use this new information.
+<br>
+<br>And there are already some rather strange tidal data tables for special purposes. Included with "JTides" is a table for Anchorage, Alaska, a place with very weird tides. This table uses 114 (!) factors in order to have a chance of modeling the tides at that location.
+<br>
+<br>Basically, "JTides" takes these worldwide tidal/current data sources and turns them into pretty graphs and databases.<p>
+
+<div align="center"><b>About JTides</b></div>
+
+JTides is delivered in a java JAR file, which must be interpreted by an appropriate java runtime engine. Since you are reading this, I will assume you have gotten over that hurdle.<p>
+
+When JTides is run, it carries out these actions:
+
+<ol>
+	<li> If this is the first run on a new system, JTides unpacks its data files (moves them from the JAR file to a suitable directory, which on this system is located at <b>&nbsp;[basePath]</b>). This step is taken because the user may wish to modify the data file set, something that is much harder to do if the files are packed away in a JAR file.
+
+	<li> If there are any changes in the data file structure, JTides regenerates its master index, the index used to quickly go from a site name to a set of site data.
+	<li> JTides reads the index into memory, making fast searches possible.
+<li> JTides reads its initialization file, located on this system at <b>&nbsp;[basePath]/JTides.ini</b>, and configures itself according to the user's previously expressed preferences. If there is no such file (true on the first run) JTides uses default options.
+</ol>
+
+Some available options are recorded by the configuration file <b>&nbsp;[basePath]/JTides.ini</b>, but are not settable in the program. If you want to customize such options, simply edit the file directly (it is in plain text format) in a text editor. Most of the variable names are self-explanatory. In order to edit successfully, be sure that JTides is not running when you make your changes.<p>
+
+<br>
+
+ <div align="center">
+<a href="InstallationSetup.html">Setup</a>&nbsp;|&nbsp;
+<a href="BasicOperation.html">Basic Operation</a>&nbsp;|&nbsp;
+	 <a href="DisplayOptions.html">Display Options</a>&nbsp;|&nbsp;
+	 <a href="SiteExplorer.html">Site Explorer</a>&nbsp;|&nbsp;
+	 <a href="NearestSites.html">Nearest Site Finder</a>&nbsp;|&nbsp;
+	 <a href="ExportOptions.html">Data Export Options</a>&nbsp;|&nbsp;
+	 <a href="DataSources.html">Data Sources</a><br>
+   <a href="Configuration.html">Configuration</a>&nbsp;|&nbsp;
+   <a href="TimeIssues.html">Time Issues</a>&nbsp;|&nbsp;
+	 <a href="Background.html">Technical Background</a>
+</div>
+
+
+
+</body>
+
+</html>

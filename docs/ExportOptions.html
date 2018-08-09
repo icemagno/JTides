@@ -1,0 +1,51 @@
+<!doctype html public "-//w3c//dtd html 3.2//en">
+
+<html>
+
+<head>
+<title>JTides Help | Export Options</title>
+<meta name="GENERATOR" content="Arachnophilia 4.0">
+<meta name="FORMATTER" content="Arachnophilia 4.0">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#800080" alink="#ff0000">
+
+<div align="center">	<h1><font color=#800040>JTides Help | Export Options</font></h1></div>
+
+<p>
+<br>Here are the primary export options:
+<br>
+<br><b>Print.</b> Simply open the desired site, choose the display type you want, and choose "Print" (<img src="../jtides/icons/Print.png" width="20" height="20" alt="">). JTides will allow you to choose printing options, then choose a printer, for this option.<p>
+
+<b>Database output.</b> "JTides" will generate a database table of tidal or current predictions and sun data in either a comma-separated-value (CSV) or tab-separated-value (TSV) file format. One of these formats will turn out to be readable by nearly everything. Choose the Configuration/Database (<img src="../jtides/icons/DocumentMag.png" width="20" height="20" alt="">) option for this, then choose the tab marked "Text Database".<p>
+
+There are two basic kinds of data lists. First is a list of high and low tide events (or, for a current site, flood, ebb and slack events). Second is a list of tidal heights separated by a chosen time interval. The second list type may take some time to generate if you choose a small time step. To stop generation of the list, click "Cancel."<p>
+
+Choose the desired starting and ending times and the type of the list, and press "create" to begin the process. First a file save dialog will appear in which you choose a file path and name for the data. This dialog assumes you want to save the data in your user home directory, which on this system is <b>&nbsp;[user.home]</b>. But on subsequent uses of this feature, your last selected directory is remembered for you.<p>
+
+<b>HTML Web Page output.</b> "JTides" can also generate a set of HTML pages of tidal or current predictions. These pages may be published on your Web site or elsewhere without restriction, as long as the copyright notice and link to the JTides Home Page is retained in the pages.<p>
+
+Simply select the desired site in the JTides main display, then choose the Configuration/Database (<img src="../jtides/icons/DocumentMag.png" width="20" height="20" alt="">) option, then select the tab marked "HTML Pages". Choose the desired years and press "Create HTML page set".<p>
+
+The pages will be created under your user directory in a special directory named "HTMLPages". This directory will be located on your system at [basePath]/HTMLPages. If you decide to create page sets for more than one location, be sure to retain copies of all the data in this directory until you have generated pages for all the desired locations, because the main index page is updated after each addition to the dataset.<p>
+
+If you decide to publish the pages, simply copy all the pages and directories under [basePath]/HTMLPages to your site and create links in your site to the "index.html" page in the base directory. The "index.html" page is the master index for all the site data you have generated.<p>
+
+Note: You may change the appearance of the generated Web pages by editing the configuration settings located in [basePath]/JTides.ini. Note the colors and numbers that begin with "html".<p>
+
+ <div align="center">
+<a href="InstallationSetup.html">Setup</a>&nbsp;|&nbsp;
+<a href="BasicOperation.html">Basic Operation</a>&nbsp;|&nbsp;
+	 <a href="DisplayOptions.html">Display Options</a>&nbsp;|&nbsp;
+	 <a href="SiteExplorer.html">Site Explorer</a>&nbsp;|&nbsp;
+	 <a href="NearestSites.html">Nearest Site Finder</a>&nbsp;|&nbsp;
+	 <a href="ExportOptions.html">Data Export Options</a>&nbsp;|&nbsp;
+	 <a href="DataSources.html">Data Sources</a><br>
+   <a href="Configuration.html">Configuration</a>&nbsp;|&nbsp;
+   <a href="TimeIssues.html">Time Issues</a>&nbsp;|&nbsp;
+	 <a href="Background.html">Technical Background</a>
+</div>
+
+</body>
+
+</html>

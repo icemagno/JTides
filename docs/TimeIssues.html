@@ -1,0 +1,92 @@
+<!doctype html public "-//w3c//dtd html 3.2//en">
+
+<html>
+
+<head>
+<title>JTides Help | Daylight Time</title>
+<meta name="GENERATOR" content="Arachnophilia 4.0">
+<meta name="FORMATTER" content="Arachnophilia 4.0">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#800080" alink="#ff0000">
+
+<div align="center">	<h1><font color=#800040>JTides Help | Time Issues</font></h1></div>
+
+<b>Daylight Time Options</b>
+<br>
+<br>"JTides" will use daylight time for the displayed sunrise and sunset times and the graphic display of daylight hours. There are three options, available in the configuration (<img src="../jtides/icons/DocumentMag.png" width="20" height="20" alt="">) dialog: always use standard time, compute daylight time, and always use daylight time. These options exist because not all locations use daylight time in the same way.
+<br>
+<br>Computed daylight time uses the host computer's assumptions about appropriate dates for daylight time. If this assumption is not correct, simply choose one of the two overriding modes.
+<br>
+<br>It is important to realize the daylight time options only affect the sunrise and sunset time computations and the various time displays. The tidal computations automatically take daylight time into account, if it is locally appropriate. The way the agencies responsible for tidal data do this is by subtly adjusting some of the mathematical constants used in tidal computation, so unfortunately the presence or absence of tidal daylight time cannot be detected to decide the issue of sunrise/sunset daylight time. This is why the user must decide about daylight time for the sun and time display data.
+<br>
+<br>As a result of this rather weird arrangement, you will notice the daylight time choice has no effect on the tidal/current time display, which is intrinsically adjusted for daylight time. The choice only affects the sunrise/sunset computations and displayed times.<p>
+
+<b>General Time Issues</b><p>
+
+As of JTides Version 4.8, some difficult time issues have been addressed for the first ... umm ... time (sorry about that). The first versions of JTides assumed that the real-time tidal display would be viewed on a computer in the same time zone as the tidal reporting station on display. This approach had some obvious limitations.<p>
+
+JTides versions since 4.8 have a somewhat more sophisticated, complex system to deal with time issues. In these versions, the tidal display adopts the time zone and time of day of the reporting station that happens to be on display, using the local system clock and time zone to compute the required differential between zones. What this means is if you have two or more tidal charts available for display in different time zones, the vertical red line meant to represent the present time will always move to the time of day appropriate to the time zone of the tidal site, which is not necessarily the computer's local time. Earlier versions failed to do this and caused a lot of confusion among those who might want an accurate picture of tides at a location not in the local time zone. It remains to be seen whether this new arrangement will also cause confusion.<p>
+
+Second, the time displayed in the status box that appears on the present-time line can show virtually any time zone the user selects. To change time zones, simply press the configuration (<img src="../jtides/icons/DocumentMag.png" width="20" height="20" alt="">) dialog button and choose from the "Time Zone" drop-down list. The choices are:<p>
+
+<ul>
+<li>"Use System Time Zone" -- meaning, use your computer's time zone.
+<li>"Use Site Time Zone" -- meaning, use the time zone of the tidal site on display.
+<li>Choose from a list of time zones, from GMT-12 to GMT+12.
+</ul><p>
+
+The last option is useful in the case where, for one reason or another, your system's time zone is not correct, or JTides (actually, the Java engine) cannot correctly determine your system's time zone, or you have another reason to choose an arbitrary time zone.<p>
+
+Remember this list of options only affects the time printed in the status box, it never causes the time line to change its position. But please also remember that the time printed in the status box will only agree with the position of the time line if you have chosen "Use Site Time Zone," or your local time zone happens to be the same as the tidal reporting station on display.<p>
+
+<b>System Time Issues</b><p>
+
+To function correctly, JTides needs to know the date, time of day and time zone where your system is located. There are several reasons this information might not get through:<p>
+
+<ol>
+<li>The system's clock is set correctly but the correct time zone is not selected.
+<li>The correct time zone is selected but the system's clock is not set properly.
+<li>Both of the above.
+<li>Java cannot interpret the correctly chosen system time zone.
+</ol>
+
+As to (1) through (3), it is essential to determine and set a correct time zone, date and time of day. If this isn't done, JTides has no chance to report accurate tides in real time. As to (4), a Java failure to get the time zone from your system, this is not likely but it does happen. The symptom will be JTides not displaying the same time as the system itself when "Use System Time Zone" has been selected at the configuration dialog.<p>
+
+If Java is not correctly interpreting your chosen time zone, you may have to provide an explicit statement about the time zone in the script you use to launch JTides. Here is an example of a Linux script that launches JTides after establishing a time zone (the complete script lies between the two horizontal lines):<p>
+
+<hr>
+<pre>
+#!/bin/sh
+
+export TZ=PST8PDT
+java -jar JTides.jar
+</pre>
+<hr><p>
+
+As to the argument of TZ, it can take many forms. Here are the standard forms for typical US time zones:<p>
+<pre>
+PST8PDT
+MST7MDT
+CST6CDT
+EST5EDT
+</pre><p>
+
+But for any arbitrary time zone, you may use a TZ argument of "GMT-8" for US Pacific Time, "GMT-5" for US Eastern time, etc.. Just remember that time zones west of Greenwich are represented by negative numbers, east of Greenwich by positive numbers.<p>
+
+ <div align="center">
+<a href="InstallationSetup.html">Setup</a>&nbsp;|&nbsp;
+<a href="BasicOperation.html">Basic Operation</a>&nbsp;|&nbsp;
+	 <a href="DisplayOptions.html">Display Options</a>&nbsp;|&nbsp;
+	 <a href="SiteExplorer.html">Site Explorer</a>&nbsp;|&nbsp;
+	 <a href="NearestSites.html">Nearest Site Finder</a>&nbsp;|&nbsp;
+	 <a href="ExportOptions.html">Data Export Options</a>&nbsp;|&nbsp;
+	 <a href="DataSources.html">Data Sources</a><br>
+   <a href="Configuration.html">Configuration</a>&nbsp;|&nbsp;
+   <a href="TimeIssues.html">Time Issues</a>&nbsp;|&nbsp;
+	 <a href="Background.html">Technical Background</a>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+// Gerar Tabua
+
+1) TClasseTabuas.geraTabuaBD
+
+select p.cod_porto, a.cod_analise_mares, a.z0, a.origem_analise
+from mare.dbo.portos p, mare.dbo.estacao_maregrafica e,
+(select cod_estacao_maregrafica, cod_analise_mares, z0, origem_analise 
+from mare.dbo.vw_analise_mares where periodo_padrao = 'S') a
+where e.num_estacao_maregrafica =  40255 
+and p.cod_estacao_maregrafica = e.cod_estacao_maregrafica 
+and p.cod_estacao_maregrafica = a.cod_estacao_maregrafica
+
+2) TClassePrevisaoSis.create > TAnaliseMares.create > TAnaliseMares.getAnalise
+
+select cod_estacao_maregrafica,
+data_hora_inicio, data_hora_fim, periodo_padrao,
+periodo_padrao_anterior, z0, num_componentes, 
+origem_analise, fatores from 
+mare.dbo.vw_analise_mares 
+where cod_analise_mares = 1211
+
+3) TAnaliseMares.create > TAnaliseMares.getElementosReducao
+
+select nivel_medio from mare.dbo.reducao_sondagem
+where cod_analise_mares = 1211
+
+4) TClasseTabuas.geraTabuaBD > TClassePrevisaoSis.geraTabua
+
+select p.*, e.instituicao from mare.dbo.portos p, (select cod_estacao_maregrafica,
+instituicao from mare.dbo.estacao_maregrafica where cod_estacao_maregrafica = 218
+) e where p.cod_estacao_maregrafica = e.cod_estacao_maregrafica
+
+/*
+  ArqConst:= DirDadosTabuas + FormatFloat('00000', Estacao.NumEstacao) + 'CH.tmp';
+  ArqTabua:= DirDadosTabuas + FormatFloat('00000', Estacao.NumEstacao) + FormatFloat('0000', Ano) + 'Tabua.txt';
+  ArqPorto:= DirDadosTabuas + FormatFloat('00000', Estacao.NumEstacao) + FormatFloat('0000', Ano) + 'Porto.txt';
+*/
+
+5) TClasseTabuas.geraTabuaBD > TClassePrevisaoSis.geraTabua > TClassePrevisaoSis.geraArquivoConstantesSisDll
+
+	a) 
+		select num_estacao_maregrafica, nome_estacao_maregrafica, latitude, longitude, fuso 
+		from estacao_maregrafica where cod_estacao_maregrafica = 218
+		
+		
+	b) 
+		select data_hora_inicio, data_hora_fim, z0, num_componentes from 
+		mare.dbo.vw_analise_mares where cod_analise_mares = 1211
+	
+	
+	c) 
+		select ct.cod_analise_mares, ct.g, ct.h, cp.* from 
+		mare.dbo.constantes_analise ct, (select * from mare.dbo.componente) 
+		as cp where cod_analise_mares = 1211 and ct.cod_componente = cp.cod_componente 
+		order by velocidade
+		
+	d) salva para ArqConst ( *.CH.tmp )
+		
+		
+Depende do tipo de saida salva os arquivos
+	saida 1)
+	   ArqPrev = 'PREVHORCOL.txt' 'PREVHORCOL.tmp'
+	saida 2) 	
+		'PREVMAXMINCOL.txt' 'PREVMAXMINCOL.tmp'
+	
+	
+	
+	
+	
+	
+U_Dll.PREVISAO_ALTURAS_EXCEL(ArqConstDll, ArqPrevDll, 1, '01', '01', '2018', '31', '01', '2018', Nivel, 'N');
+
+Onde : 
+
+ArqConstDll = [ ENTRADA ] DirDados + NomeArqBase + 'CH.txt'
+ArqPrevDll  = Arquivo de Saida
+Nivel = Valor de 'Z0'
