@@ -1,0 +1,62 @@
+
+
+
+
+
+
+
+
+
+
+                      ANÁLISE HARMÔNICA REFINADA DA MARÉ
+
+
+
+
+                        ESTAÇÃO MAREGRÁFICA:CANANEIA
+                        LATITUDE: 25   1.0 S
+                        LONGITUDE: 47  55.5 W
+                        FUSO HORÀRIO: 3 
+                        HORA INICIAL:  12.00000 hora(s)
+                        DATA: 3 / 1 / 1955 
+                        No. DE DIAS DA ANÁLISE: 13785.00
+                        NIVEL 'MÉDIO':  159.00 cm
+                        % PARA A REJEIÇÃO DE PEQUENAS COMPONENTES:  99%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

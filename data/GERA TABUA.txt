@@ -75,3 +75,46 @@ Onde :
 ArqConstDll = [ ENTRADA ] DirDados + NomeArqBase + 'CH.txt'
 ArqPrevDll  = Arquivo de Saida
 Nivel = Valor de 'Z0'
+
+
+TClasseAnaCruzPac.geraArquivoConstantesPac ( cria arquivo EstRef.CH )
+
+select cod_estacao_maregrafica, nome_estacao_maregrafica, latitude, longitude, fuso
+from mare.dbo.estacao_maregrafica  
+
+select va.cod_analise_mares, va.fatores, va.num_componentes,
+(select nivel_medio from mare.dbo.reducao_sondagem where 
+cod_analise_mares = va.cod_analise_mares) nm from
+mare.dbo.vw_analise_mares va 
+
+
+select cap.cod_analise_mares, cp.nome, cp.m, cp.indice_1, cp.indice_2, cp.indice_3, 
+cp.indice_4, cp.comb_indice_1, cp.comb_indice_2, 
+cp.comb_indice_3, cp.comb_indice_4, cap.h, cap.g from 
+mare.dbo.constantes_analise_pacmare cap
+inner join mare.dbo.componente_pacmare cp 
+on cap.cod_componente = cp.cod_componente
+order by cap.cod_sequencial
+
+
+Apos isso, chama TClassePeriodos.geraArqAlturasAh e salva Dados.alt
+
+( select para pegar a estacao maregrafica denovo ) 
+
+
+select * from
+/*mare.dbo.vw_alturas_unificadas */
+mare.dbo.vw_alturas_horarias
+/*
+where cod_equipamento_estacao_maregrafica = 
+and mare.dbo.ConverteData(data_hora) >= 
+and mare.dbo.ConverteData(data_hora) <= 
+*/
+where (datepart(mi ,data_hora) % 60) = 0
+and datepart(ss ,data_hora) = 0 
+and datepart(ms, data_hora) = 0
+order by data_hora 
+
+
+
+
