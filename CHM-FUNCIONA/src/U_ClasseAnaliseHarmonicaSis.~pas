@@ -37,8 +37,7 @@ begin
 //
 end;
 
-procedure TClasseAnaliseHarmonicaSis.analiseHarmonica(TipoAnalise: TTipoAnalise;
-  ArquivoAlt, ArquivoAh, ArquivoConst: string);
+procedure TClasseAnaliseHarmonicaSis.analiseHarmonica(TipoAnalise: TTipoAnalise; ArquivoAlt, ArquivoAh, ArquivoConst: string);
 var
   ArqConstantes, ArqReducao, ArqRelatorio: string;
   ArqAlt, ArqConst, ArqReduc, ArqRelat, Arq13Ciclos, Arq9Ciclos: array [1..150] of Char;
@@ -187,6 +186,8 @@ begin
     end;
   CloseFile(ArqSaida);
   CloseFile(ArqConst);
+  DeleteFile(ArquivoConst);
+  RenameFile(ArquivoConst + '.tmp', ArquivoConst);
 end;
 
 function TClasseAnaliseHarmonicaSis.retornaLinhaComponente(Nome, H, G: string): string;

@@ -21,11 +21,11 @@ type
     Fuso: string;
     Z0: Real;
     function retornaZ0Reducao(ArqReducao: string): Real;
-    procedure geraArqAlturasDll(Arquivo: string);
     procedure formataCostantes(ArquivoConst: string);
     function retornaLinhaComponente(Nome, H, G: string): string;
   public
     constructor create;
+    procedure geraArqAlturasDll(Arquivo: string);
     procedure analiseHarmonica(TipoAnalise: TTipoAnalise;
       ArquivoAlt, ArquivoAh, ArquivoConst: string);
   end;
@@ -37,8 +37,7 @@ begin
 //
 end;
 
-procedure TClasseAnaliseHarmonicaSis.analiseHarmonica(TipoAnalise: TTipoAnalise;
-  ArquivoAlt, ArquivoAh, ArquivoConst: string);
+procedure TClasseAnaliseHarmonicaSis.analiseHarmonica(TipoAnalise: TTipoAnalise; ArquivoAlt, ArquivoAh, ArquivoConst: string);
 var
   ArqConstantes, ArqReducao, ArqRelatorio: string;
   ArqAlt, ArqConst, ArqReduc, ArqRelat, Arq13Ciclos, Arq9Ciclos: array [1..150] of Char;

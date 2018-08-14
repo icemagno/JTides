@@ -20,8 +20,7 @@ type
       DataIni, DataFim: string): Boolean;
     function ValidaPeriodoAlturasEquipamento(Conexao: TADOConnection; Area: MinInteiroSs; CodEquipEstacao: PeqInteiroSs;
       DataIni, DataFim: TDate): MinInteiroSs;
-    procedure GeraArqConstantesDll(Conexao: TADOConnection; CodEstacao: PeqInteiroSs; CodAnalise: integer;
-      Arquivo: string);
+    procedure GeraArqConstantesDll(Conexao: TADOConnection; CodEstacao: PeqInteiroSs; CodAnalise: integer; Arquivo: string);
     function FormataIndiceComponente(Indice: string): string;
     procedure ConcatenaArquivos(ArqPrin, ArqDados: string; Ignorar: PeqInteiroSs; DelArqDados: Boolean);
     function ExisteReducao(Conexao: TADOConnection; CodEstacao: PeqInteiroSs; CodAnalise: LongoInteiroSs): Boolean;
@@ -31,8 +30,7 @@ type
     procedure GeraArqConstantesPadraoDll(Conexao: TADOConnection; CodEstacao: PeqInteiroSs; Arquivo: string);
     function RetornaCodigoAnalisePeriodoPadrao(Conexao: TADOConnection; CodEstacao: PeqInteiroSs): Integer;
     function RetornaZ0Analise(Conexao: TADOConnection; CodAnalise: Integer): Real;
-    function RetornaQtdAlturasObsHorasCheias(Conexao: TADOConnection; CodEstacao, CodEquipEstacao: PeqInteiroSs;
-      DataIni, DataFim: string): Integer;
+    function RetornaQtdAlturasObsHorasCheias(Conexao: TADOConnection; CodEstacao, CodEquipEstacao: PeqInteiroSs; DataIni, DataFim: string): Integer;
     function ExisteReducaoTemp(Conexao: TADOConnection; CodEstacao: PeqInteiroSs; CodAnalise: LongoInteiroSs): Boolean;
     function ExisteAlturasPeriodoTemp(Conexao: TADOConnection; CodEstacao, CodEquipEstacao: PeqInteiroSs; DataIni, DataFim: string): Boolean;
     procedure GeraArquivoAlturasTempEquipamento(Conexao: TADOConnection; CodEstacao, CodEquipEstacao: PeqInteiroSs; DataInicial,
@@ -111,6 +109,7 @@ var
   ArqSaida: TextFile;
   NumEstacao, NomeEstacao, Lat, Long, Fuso: string;
   I: Integer;
+  sqlQuery : string;
 begin
   EstMaregr:= TADOQuery.Create(nil);
   AltHor:= TADOQuery.Create(nil);
@@ -129,10 +128,15 @@ begin
   AssignFile(ArqSaida, Arquivo);
   Rewrite(ArqSaida);
   Writeln(ArqSaida, NumEstacao, BNDO.converte_data_arq(DataIni), BNDO.converte_data_arq(DataFim), NomeEstacao, Lat, Long, Fuso);
-  AltHor.SQL.Add('select * from vw_alturas_horarias where cod_estacao_maregrafica = ' + IntToStr(CodEstacao) +
+
+  sqlQuery := 'select * from vw_alturas_horarias where cod_estacao_maregrafica = ' + IntToStr(CodEstacao) +
     ' and cod_equipamento_estacao_maregrafica = ' + IntToStr(CodEquipEstacao) + ' and dbo.ConverteData(data_hora) >= ''' + BNDO.ConverteDataAnsi(DataIni) +
     ''' and dbo.ConverteData(data_hora) <= ''' + BNDO.ConverteDataAnsi(DataFim) + ''' and datepart(mi, data_hora) = 00 and ' +
-    'datepart(ss, data_hora) = 00 order by data_hora');
+    'datepart(ss, data_hora) = 00 order by data_hora';
+
+  writeln( sqlQuery );
+
+  AltHor.SQL.Add( sqlQuery );
   AltHor.Open;
   AltHor.First;
   while not (AltHor.Eof) do
@@ -973,6 +977,9 @@ var
   Arq: TextFile;
   CodEstacao: PeqInteiroSs;
 begin
+
+  writeln('Gerando constantes em ' + Arquivo );
+
   EstMaregr:= TADOQuery.Create(nil);
   AnaliseMares:= TADOQuery.Create(nil);
   Componente:= TADOQuery.Create(nil);
