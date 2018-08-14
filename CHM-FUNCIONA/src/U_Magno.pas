@@ -2,18 +2,22 @@ unit U_Magno;
 
 interface
 
-uses U_ClasseRotinasGenericas, ADODB, SysUtils, ActiveX,U_ClasseAnaliseHarmonicaSis, U_ClassePrevisaoSis;
+uses U_ClasseRotinasGenericas, ADODB, SysUtils, ActiveX,U_ClasseAnaliseHarmonicaSis, U_ClassePrevisaoSis,
+U_Tipos;
 
 type
   TMagno = class
   private
   public
+     procedure CarregaFasesLua( Ano: Word; Fuso: Smallint; ArquivoFases: string);
      procedure GeraArqAlturasDll( CodEstacao : Word; CodEqpto : Word; DataIni, DataFim, Arquivo: string  );
      procedure GeraArqConstantesDll( CodEstacao: Word; CodAnalise: integer; Arquivo: string  );
      function getConnection() :  TADOConnection;
      function RetornaZ0Analise(Conexao: TADOConnection; CodAnalise: Integer): Real;
      procedure previsaoColunas( CodEstacao: Word; CodAnalise: Integer; vDataInicial, vDataFinal: TDateTime;
         Diretorio: string; TipoSaida : Word; ArqConst : string );
+     function geraTabua(CodEstacao : word; NumEstacao:word; DirDadosTabuas:string; Ano: TAnoTabua; ArquivoConst : string): string;
+
   end;
 
 implementation
@@ -55,6 +59,27 @@ begin
   
 end;
 
+
+procedure TMagno.CarregaFasesLua( Ano: Word; Fuso: Smallint; ArquivoFases: string);
+var
+  AdoConnection : TADOConnection;
+  Prev : TClassePrevisaoSis;
+begin
+  AdoConnection := getConnection();
+  Prev := TClassePrevisaoSis.create();
+  Prev.CarregaFasesLua( AdoConnection, Ano, Fuso, ArquivoFases );
+end;
+
+function TMagno.geraTabua( CodEstacao : word; NumEstacao:word; DirDadosTabuas:string; Ano: TAnoTabua; ArquivoConst : string): string;
+var
+  AdoConnection : TADOConnection;
+  Prev : TClassePrevisaoSis;
+begin
+  AdoConnection := getConnection();
+  Prev := TClassePrevisaoSis.create();
+  result := Prev.geraTabua( AdoConnection, CodEstacao, NumEstacao, DirDadosTabuas,Ano , ArquivoConst );
+end;
+
 procedure TMagno.GeraArqConstantesDll( CodEstacao: Word; CodAnalise: integer; Arquivo: string  );
 var
   AdoConnection : TADOConnection;
@@ -66,7 +91,6 @@ begin
   CRotGen := TClasseRotinasGenericas.Create();
   //CRotGen.GeraArqConstantesDll(AdoConnection, CodEstacao, CodAnalise, Arquivo);
   //CRotGen.GeraArquivoConstantesDll(AdoConnection, 1, CodAnalise, Arquivo);
-
   CRotGen.GeraArqConstantesPadraoDll( AdoConnection, CodEstacao, Arquivo );
 
 end;  
@@ -76,7 +100,6 @@ procedure TMagno.previsaoColunas( CodEstacao: Word; CodAnalise: Integer; vDataIn
 var
   Prev : TClassePrevisaoSis;
   AdoConnection : TADOConnection;
-  CRotGen: TClasseRotinasGenericas;
   Z0: Real;
 begin
   Prev := TClassePrevisaoSis.create();

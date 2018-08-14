@@ -8,6 +8,7 @@ type
   TDirecionador = class
   private
   public
+    procedure CarregaFasesLua( Ano: Word; Fuso: Smallint; ArquivoFases: string);
     procedure analiseHarmonica(ArqAlt, ArqAh, ArqConst: string);
     procedure previsao(ArqConst, ArqPrev: string; DataInicial, DataFinal: TDateTime; Z0: Real; TipoSaida : Integer);
     procedure GeraArqAlturasDll(CodEstacao : Word; CodEqpto : Word; DataIni, DataFim, ArqConst: string);
@@ -43,12 +44,26 @@ begin
 end;
 
 
+procedure TDirecionador.CarregaFasesLua( Ano: Word; Fuso: Smallint; ArquivoFases: string);
+var MG : TMagno;
+begin
+  MG := TMagno.Create();
+  MG.CarregaFasesLua(Ano,Fuso,ArquivoFases);
+end;
+
+
 procedure TDirecionador.teste();
 var MG : TMagno;
 begin
   MG := TMagno.Create();
-  MG.previsaoColunas(256,636,EncodeDate(2018,01,01),EncodeDate(2020,12,31),'c:\magno\anhar\',1,'C:\Magno\anhar\constantes.txt');
-  MG.previsaoColunas(256,636,EncodeDate(2018,01,01),EncodeDate(2020,12,31),'c:\magno\anhar\',2,'C:\Magno\anhar\constantes.txt');
+
+  MG.geraTabua( 256, 50140, 'c:\magno\anhar\', 2018, 'C:\Magno\anhar\constantes-tabua.txt');
+
+
+  //MG.CarregaFasesLua(2018,3,'C:\Magno\anhar\faseslua.txt');
+
+  //MG.previsaoColunas(256,636,EncodeDate(2018,01,01),EncodeDate(2020,12,31),'c:\magno\anhar\',1,'C:\Magno\anhar\constantes.txt');
+  //MG.previsaoColunas(256,636,EncodeDate(2018,01,01),EncodeDate(2020,12,31),'c:\magno\anhar\',2,'C:\Magno\anhar\constantes.txt');
 
 end;
 

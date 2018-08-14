@@ -13,9 +13,10 @@ type
     procedure GeraCabecalhoPrevisaoHoraria(Conexao: TADOConnection; Area: MinInteiroSs; CodAnalise: Integer;
         DataIni, DataFim: TDate; Arquivo: string);
     procedure GeraCabecalhoPrevisaoMaxMin(Conexao: TADOConnection; Area: MinInteiroSs; CodAnalise: Integer;
-  DataIni, DataFim: TDate; Arquivo: string);    
+  DataIni, DataFim: TDate; Arquivo: string);
   public
-
+    function geraTabua(Conexao: TADOConnection; CodEstacao : PeqInteiroSs; NumEstacao:word; DirDadosTabuas:string; Ano: TAnoTabua; ArquivoConst : string): string;
+    procedure CarregaFasesLua(Conexao: TADOConnection; Ano: PeqInteiroSs; Fuso: Smallint; ArquivoFases: string);
 
     procedure PrevisaoColunasOld(Conexao: TADOConnection; Area: MinInteiroSs; CodEstacao: PeqInteiroSs; CodAnalise: Integer;
   DataIni, DataFim: TDate; Diretorio: string; Z0: Real; TipoSaida: MinInteiroSs; Cabecalho, DeletaConst: Boolean; ArqConst : string);
@@ -28,6 +29,85 @@ type
   end;
 
 implementation
+
+
+
+
+function TClassePrevisaoSis.geraTabua(Conexao: TADOConnection; CodEstacao : PeqInteiroSs; NumEstacao:word; DirDadosTabuas:string; Ano: TAnoTabua; ArquivoConst : string): string;
+var
+  Portos: TADOQuery;
+  ArqConstDll, ArqPortoDll, ArqTabuaDll: array [1..150] of char;
+  Carta: array [1..5] of char;
+  Instituicao: array [1..13] of char;
+  NomePorto: array [1..76] of char;
+  AnoTabua: array [1..4] of char;
+  ArqConst, ArqTabua, ArqPorto: string;
+  CRotGen : TClasseRotinasGenericas;
+begin
+
+  CRotGen := TClasseRotinasGenericas.Create();
+
+  ArqConst:= DirDadosTabuas + FormatFloat('00000', NumEstacao) + 'CH.tmp';
+  ArqTabua:= DirDadosTabuas + FormatFloat('00000', NumEstacao) +
+    FormatFloat('0000', Ano) + 'Tabua.txt';
+  ArqPorto:= DirDadosTabuas + FormatFloat('00000', NumEstacao) +
+    FormatFloat('0000', Ano) + 'Porto.txt';
+  if (FileExists(ArqConst)) then
+    SysUtils.DeleteFile(ArqConst);
+  if (FileExists(ArqTabua)) then
+    SysUtils.DeleteFile(ArqTabua);
+  if (FileExists(ArqPorto)) then
+    SysUtils.DeleteFile(ArqPorto);
+  Portos:= TADOQuery.Create(nil);
+
+  Portos.Connection:= Conexao;
+
+  Portos.SQL.Add('select p.*, e.instituicao from mare.dbo.portos p, (select cod_estacao_maregrafica, ' +
+    'instituicao from mare.dbo.estacao_maregrafica where cod_estacao_maregrafica = ' + IntToStr(CodEstacao) + ') e ' +
+    'where p.cod_estacao_maregrafica = e.cod_estacao_maregrafica');
+  Portos.Open;
+  BNDO.strtochar(Carta, Portos.FieldByName('carta').AsString);
+  BNDO.strtochar(Instituicao, Portos.FieldByName('instituicao').AsString);
+  BNDO.strtochar(NomePorto, Portos.FieldByName('nome').AsString);
+  Portos.Close;
+  FreeAndNil(Portos);
+
+  CRotGen.GeraArqConstantesPadraoDll(Conexao, CodEstacao, ArqConst);
+
+  BNDO.strtochar(AnoTabua, IntToStr(Ano));
+  BNDO.strtochar(ArqConstDll, ArqConst);
+  BNDO.strtochar(ArqPortoDll, ArqPorto);
+  BNDO.strtochar(ArqTabuaDll, ArqTabua);
+  U_Dll.TABUA(ArqConstDll, ArqPortoDll, ArqTabuaDll, Carta, Instituicao, NomePorto, AnoTabua);
+  //SysUtils.DeleteFile(ArqConst);
+  //SysUtils.DeleteFile(ArqPorto);
+  Result:= ArqTabua;
+end;
+
+procedure TClassePrevisaoSis.CarregaFasesLua(Conexao: TADOConnection; Ano: PeqInteiroSs; Fuso: Smallint;
+  ArquivoFases: string);
+var
+  ArqFases: TextFile;
+  FasesLua: TADOQuery;
+begin
+  AssignFile(ArqFases, ArquivoFases);
+  Rewrite(ArqFases);
+  FasesLua:= TADOQuery.Create(nil);
+  FasesLua.Connection:= Conexao;
+  FasesLua.SQL.Clear;
+  FasesLua.SQL.Add('select dateadd(hh, ' + IntToStr(Fuso) + ', data_hora) data_hora, fase_lua ');
+  FasesLua.SQL.Add('from mare.dbo.fases_lua_tu where datepart(yyyy, data_hora) = ' + IntToStr(Ano));
+  FasesLua.Open;
+  while (not (FasesLua.Eof)) do
+    begin
+      Writeln(ArqFases, FormatDateTime('dd/mm/yyyy', FasesLua.FieldByName('data_hora').AsDateTime) + ' ' +
+        FasesLua.FieldByName('fase_lua').AsString);
+      FasesLua.Next;  
+    end;
+  FasesLua.Close;
+  CloseFile(ArqFases);
+end;
+
 
 procedure TClassePrevisaoSis.GeraCabecalhoPrevisaoMaxMin(Conexao: TADOConnection; Area: MinInteiroSs; CodAnalise: Integer;
   DataIni, DataFim: TDate; Arquivo: string);
@@ -167,8 +247,6 @@ begin
                SysUtils.DeleteFile(ArqAux);
              BNDO.strtochar(Tipo, '1');
              BNDO.strtochar(ArqPrevDll, ArqAux);
-
-             BNDO.strtochar( DataRelatorio, '10/10/2018');
              U_Dll.PREVISAO_ALTURAS_EXCEL(ArqConstDll, ArqPrevDll, Tipo, Di, Mi, Ai, Df, Mf, Af, Nivel, Op);
              CRotinasGenericas.ConcatenaArquivos(ArqPrevAux, ArqPrevDll, 1, True);
            end;
